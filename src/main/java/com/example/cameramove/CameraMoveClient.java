@@ -6,26 +6,26 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 
 public class CameraMoveClient implements ClientModInitializer {
-    private boolean rotating = false;
+    private boolean active = false;
+    private boolean jumpWasDown = false;
 
     @Override
     public void onInitializeClient() {
-        ClientTickEvents.END_CLIENT_TICK.register(this::onClientTick);
-    }
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            ClientPlayerEntity player = client.player;
+            if (player == null) {
+                return;
+            }
 
-    private void onClientTick(MinecraftClient client) {
-        ClientPlayerEntity player = client.player;
-        if (player == null) {
-            return;
-        }
+            boolean jumpDown = client.options.jumpKey.isPressed();
+            if (jumpDown && !jumpWasDown) {
+                active = !active;
+            }
+            jumpWasDown = jumpDown;
 
-        if (client.options.jumpKey.wasPressed()) {
-            rotating = !rotating;
-        }
-
-        if (rotating) {
-            float currentYaw = player.getYaw();
-            player.setYaw(currentYaw + 2.0f);
-        }
+            if (active) {
+                player.changeLookDirection(24.0, 0.0);
+            }
+        });
     }
 }
