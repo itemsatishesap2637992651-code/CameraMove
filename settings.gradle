@@ -1,1 +1,11 @@
-'[https://maven.fabricmc.net/](https://maven.fabricmc.net/)'
+pluginManagement {
+    repositories {
+        maven {
+            url = 'https://maven.fabricmc.net/'
+        }
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'CameraMove'
+
