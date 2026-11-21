@@ -1,13 +1,20 @@
 plugins {
-    id 'fabric-loom' version '1.14.10'
+    id 'net.fabricmc.fabric-loom-remap' version '1.14.10'
 }
 
 version = '1.0.0'
 group = 'com.example.cameramove'
 
-base { archivesName = 'CameraMove-1.21.11-Fabric' }
+base {
+    archivesName = 'CameraMove-1.21.11-Fabric'
+}
 
-repositories { maven { url = 'https://maven.fabricmc.net/' }; mavenCentral() }
+repositories {
+    maven {
+        url = 'https://maven.fabricmc.net/'
+    }
+    mavenCentral()
+}
 
 dependencies {
     minecraft 'com.mojang:minecraft:1.21.11'
@@ -18,7 +25,14 @@ dependencies {
 
 processResources {
     inputs.property 'version', project.version
-    filesMatching('fabric.mod.json') { expand 'version': project.version }
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version
+    }
 }
 
-java { toolchain { languageVersion = JavaLanguageVersion.of(21) }; withSourcesJar() }
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    withSourcesJar()
+}
