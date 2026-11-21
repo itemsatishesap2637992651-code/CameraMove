@@ -7,4 +7,3 @@ public class CameraMoveClient implements ClientModInitializer {
     public void onInitializeClient() {
     }
 }
-
