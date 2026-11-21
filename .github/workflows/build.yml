@@ -1,4 +1,3 @@
-
 name: Build CameraMove JAR
 
 on:
@@ -15,16 +14,13 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      
-        
-
       - uses: gradle/gradle-build-action@v3
         with:
           gradle-version: '9.2.0'
-      
           arguments: build
 
       - uses: actions/upload-artifact@v4
         with:
           name: CameraMove-Fabric-1.21.11
-          path: cameramove/build/libs/*.jar
+          path: build/libs/*.jar
+          if-no-files-found: error
