@@ -12,13 +12,15 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public class CameraMoveClient implements ClientModInitializer {
-    private static final double BASE_SPEED = 36.0;
+    private static final double BASE_SPEED = 42.0;
     private static final int MIN_SPEED = 10;
     private static final int MAX_SPEED = 300;
-    private static final String CATEGORY = "category.cameramove.main";
+    private static final KeyBinding.Category CATEGORY =
+            KeyBinding.Category.create(Identifier.of("cameramove", "main"));
 
     private static int speedPercent = 100;
 
@@ -112,6 +114,10 @@ public class CameraMoveClient implements ClientModInitializer {
         ));
     }
 
+    private static String formatSpeedLabel(int value) {
+        return "Hız: %" + value + (value >= 250 ? " (Çok Hızlı)" : "");
+    }
+
     private static final class CameraMoveScreen extends Screen {
         private final Screen parent;
 
@@ -126,19 +132,26 @@ public class CameraMoveClient implements ClientModInitializer {
             int cy = this.height / 2;
             double progress = (double) (speedPercent - MIN_SPEED) / (double) (MAX_SPEED - MIN_SPEED);
 
-            SliderWidget slider = new SliderWidget(cx - 110, cy - 20, 220, 20, Text.empty(), progress) {
+            SliderWidget slider = new SliderWidget(
+                    cx - 110,
+                    cy - 20,
+                    220,
+                    20,
+                    Text.literal(formatSpeedLabel(speedPercent)),
+                    progress
+            ) {
                 @Override
                 protected void updateMessage() {
                     int val = MIN_SPEED + (int) Math.round(this.value * (MAX_SPEED - MIN_SPEED));
-                    this.setMessage(Text.literal("Hız: %" + val + (val >= 250 ? " (Çok Hızlı)" : "")));
+                    this.setMessage(Text.literal(formatSpeedLabel(val)));
                 }
 
                 @Override
                 protected void applyValue() {
                     speedPercent = MIN_SPEED + (int) Math.round(this.value * (MAX_SPEED - MIN_SPEED));
+                    this.updateMessage();
                 }
             };
-            slider.updateMessage();
             this.addDrawableChild(slider);
 
             this.addDrawableChild(ButtonWidget.builder(Text.literal("Hızı %300 Yap"), btn -> {
